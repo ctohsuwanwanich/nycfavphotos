@@ -233,7 +233,7 @@ mapboxgl.accessToken = 'MAPBOX_TOKEN_PLACEHOLDER';
     `;
     document.body.appendChild(legend);
 
-    // ── BUILD PLANNER ──
+    // ── BUILD PLANNER TOOL ──
     const plannerToggle = document.createElement('button');
     plannerToggle.className = 'planner-toggle';
     plannerToggle.innerHTML = `<span>🗓</span> My Trip Planner <span id="trip-count"></span>`;
