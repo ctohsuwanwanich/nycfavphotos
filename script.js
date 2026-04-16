@@ -1,24 +1,7 @@
-mapboxgl.accessToken = 'pk.eyJ1IjoibmV3Y2hhbmFwb3JuIiwiYSI6ImNtbmkydWo3NTA4b3MydHBzNG51cTljd24ifQ.YRBkXAWNP5oubXSSObk9XQ;
+// ── MAPBOX TOKEN ──
+mapboxgl.accessToken = 'pk.eyJ1IjoibmV3Y2hhbmFwb3JuIiwiYSI6ImNtbmkydWo3NTA4b3MydHBzNG51cTljd24ifQ.YRBkXAWNP5oubXSSObk9XQ';
 
-const mapOptions = {
-    container: 'map-container',
-    style: 'mapbox://styles/mapbox/standard', // Use the standard style for the map
-    projection: 'globe', // display the map as a globe
-    zoom: 13, // initial zoom level, 0 is the world view, higher values zoom in
-    center: [-73.98836, 40.73632], // center the map on this longitude and latitude
-    bearing: 28.75,
-    pitch: 20,
-    config: {
-        basemap: {
-            showPlaceLabels: false,
-            showPointOfInterestLabels: false,
-            showRoadLabels: false,
-            showTransitLabels: false,
-            theme: "monochrome"
-        }
-    },
-}
-
+// ── SPOTS DATA ──
 const spotsData = [
     {
         name: "Little Island",
@@ -34,7 +17,7 @@ const spotsData = [
         best_time: "Sunset",
         lat: 40.73833021,
         lng: -74.0108238,
-        photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298119/IMG_4331_jdhxxq.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298120/IMG_4373_ywtaoo.jpg"]
+        photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298119/IMG_4331_jdhxxq.jpg", "https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298120/IMG_4373_ywtaoo.jpg"]
     },
     {
         name: "Strand Book Store",
@@ -50,7 +33,7 @@ const spotsData = [
         best_time: "Daytime",
         lat: 40.77480555,
         lng: -73.97275255,
-        photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298126/IMG_5457_f2rdx1.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298126/IMG_5609_oxibol.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298126/IMG_5487_znqdvx.jpg"]
+        photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298126/IMG_5457_f2rdx1.jpg", "https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298126/IMG_5609_oxibol.jpg", "https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298126/IMG_5487_znqdvx.jpg"]
     },
     {
         name: "Bow Bridge",
@@ -58,7 +41,7 @@ const spotsData = [
         best_time: "Daytime",
         lat: 40.77583379,
         lng: -73.97180471,
-        photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298132/IMG_7171_y2c6bu.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298133/IMG_7177_pjnttc.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298132/IMG_7175_xtfahd.jpg"]
+        photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298132/IMG_7171_y2c6bu.jpg", "https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298133/IMG_7177_pjnttc.jpg", "https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298132/IMG_7175_xtfahd.jpg"]
     },
     {
         name: "Bethesda Fountain",
@@ -166,15 +149,15 @@ const spotsData = [
     }
 ];
 
-// avg time at a spot (minutes) + travel time between spots (minutes, rough estimate)
+// ── CONSTANTS ──
 const TIME_AT_SPOT = 45;
 const TRAVEL_BETWEEN = 25;
-
 const timeColors = {
     Daytime: '#7bb3d4',
     Sunset: '#c87c7c'
 };
 
+// ── SINGLE MAP INIT ──
 const map = new mapboxgl.Map({
     container: 'map-container',
     style: 'mapbox://styles/mapbox/standard',
@@ -195,41 +178,40 @@ const map = new mapboxgl.Map({
 
 map.addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
+// ── STATE ──
 let activeFilter = 'All';
 let markers = [];
-let tripList = []; // array of spot indices
+let tripList = [];
 
 // ── BUILD HEADER ──
 const header = document.createElement('div');
 header.className = 'header';
 header.innerHTML = `
-        <div class="header-tape"></div>
-        <h1>New's NYC<br>Photo Diary 📷</h1>
-        <div class="instagram">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c87c7c" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c87c7c" stroke="none"/></svg>
-            @nnctshot
-        </div>
-        <div class="subtitle">click a pin to explore ✨<br>build your own itinerary below!</div>
-    `;
+    <div class="header-tape"></div>
+    <h1>New's NYC<br>Photo Diary 📷</h1>
+    <div class="instagram">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c87c7c" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c87c7c" stroke="none"/></svg>
+        @nnctshot
+    </div>
+    <div class="subtitle">click a pin to explore ✨<br>build your own itinerary below!</div>
+`;
 document.body.appendChild(header);
 
-// ── BUILD FILTER ──
+// ── BUILD FILTER BAR ──
 const filterBar = document.createElement('div');
 filterBar.className = 'filter-bar';
 filterBar.innerHTML = `
-        <button class="filter-btn active-all" data-filter="All">🗺 All spots</button>
-        <button class="filter-btn" data-filter="Daytime">☀️ Daytime</button>
-        <button class="filter-btn" data-filter="Sunset">🌅 Sunset</button>
-    `;
+    <button class="filter-btn active-all" data-filter="All">🗺 All spots</button>
+    <button class="filter-btn" data-filter="Daytime">☀️ Daytime</button>
+    <button class="filter-btn" data-filter="Sunset">🌅 Sunset</button>
+`;
 document.body.appendChild(filterBar);
 
 filterBar.addEventListener('click', e => {
     const btn = e.target.closest('.filter-btn');
     if (!btn) return;
     activeFilter = btn.dataset.filter;
-    filterBar.querySelectorAll('.filter-btn').forEach(b => {
-        b.className = 'filter-btn';
-    });
+    filterBar.querySelectorAll('.filter-btn').forEach(b => { b.className = 'filter-btn'; });
     if (activeFilter === 'All') btn.classList.add('active-all');
     else if (activeFilter === 'Daytime') btn.classList.add('active-day');
     else btn.classList.add('active-sunset');
@@ -240,19 +222,19 @@ filterBar.addEventListener('click', e => {
 const legend = document.createElement('div');
 legend.className = 'legend';
 legend.innerHTML = `
-        <h4>Best time to visit</h4>
-        <div class="legend-item">
-            <div class="legend-dot" style="background:${timeColors.Daytime}"></div>
-            <span>Daytime</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-dot" style="background:${timeColors.Sunset}"></div>
-            <span>Sunset / Evening</span>
-        </div>
-    `;
+    <h4>Best time to visit</h4>
+    <div class="legend-item">
+        <div class="legend-dot" style="background:${timeColors.Daytime}"></div>
+        <span>Daytime</span>
+    </div>
+    <div class="legend-item">
+        <div class="legend-dot" style="background:${timeColors.Sunset}"></div>
+        <span>Sunset / Evening</span>
+    </div>
+`;
 document.body.appendChild(legend);
 
-// ── BUILD PLANNER TOOL ──
+// ── BUILD TRIP PLANNER ──
 const plannerToggle = document.createElement('button');
 plannerToggle.className = 'planner-toggle';
 plannerToggle.innerHTML = `<span>🗓</span> My Trip Planner <span id="trip-count"></span>`;
@@ -261,15 +243,15 @@ document.body.appendChild(plannerToggle);
 const plannerPanel = document.createElement('div');
 plannerPanel.className = 'planner-panel';
 plannerPanel.innerHTML = `
-        <div class="planner-header">
-            <span>Trip Planner ✏️</span>
-            <button class="planner-clear" id="clear-trip">clear all</button>
-        </div>
-        <div class="planner-body" id="planner-body">
-            <div class="planner-empty">No spots added yet~<br>Click a pin and tap "Add to trip" 📌</div>
-        </div>
-        <div class="planner-result" id="planner-result" style="display:none"></div>
-    `;
+    <div class="planner-header">
+        <span>Trip Planner ✏️</span>
+        <button class="planner-clear" id="clear-trip">clear all</button>
+    </div>
+    <div class="planner-body" id="planner-body">
+        <div class="planner-empty">No spots added yet~<br>Click a pin and tap "Add to trip" 📌</div>
+    </div>
+    <div class="planner-result" id="planner-result" style="display:none"></div>
+`;
 document.body.appendChild(plannerPanel);
 
 plannerToggle.addEventListener('click', () => {
@@ -286,14 +268,14 @@ document.getElementById('clear-trip').addEventListener('click', () => {
 function createMarker(spot, idx) {
     const el = document.createElement('div');
     el.style.cssText = `
-            width: 16px; height: 16px;
-            border-radius: 50%;
-            background: ${timeColors[spot.best_time]};
-            border: 2.5px solid rgba(255,255,255,0.9);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
-            cursor: pointer;
-            transition: transform 0.15s;
-        `;
+        width:16px; height:16px;
+        border-radius:50%;
+        background:${timeColors[spot.best_time]};
+        border:2.5px solid rgba(255,255,255,0.9);
+        box-shadow:0 2px 6px rgba(0,0,0,0.25);
+        cursor:pointer;
+        transition:transform 0.15s;
+    `;
     el.addEventListener('mouseenter', () => el.style.transform = 'scale(1.4)');
     el.addEventListener('mouseleave', () => el.style.transform = 'scale(1)');
 
@@ -305,12 +287,14 @@ function createMarker(spot, idx) {
         .setPopup(popup)
         .addTo(map);
 
-    // re-render popup html after open to attach event
     marker.getPopup().on('open', () => {
         setTimeout(() => {
             const btn = document.getElementById(`add-btn-${idx}`);
             if (btn) {
-                if (tripList.includes(idx)) btn.classList.add('added'), btn.textContent = '✓ Added';
+                if (tripList.includes(idx)) {
+                    btn.classList.add('added');
+                    btn.textContent = '✓ Added';
+                }
                 btn.addEventListener('click', () => toggleTrip(idx, btn));
             }
         }, 50);
@@ -323,25 +307,25 @@ function buildPopupHTML(spot, idx) {
     const badgeClass = spot.best_time === 'Daytime' ? 'day' : 'sunset';
     const badgeLabel = spot.best_time === 'Daytime' ? '☀️ Daytime' : '🌅 Sunset';
     const photosHTML = spot.photos && spot.photos.length
-        ? `<div class="popup-photos">${spot.photos.map(p => `<img src="${p}" alt="photo">`).join('')}</div>`
+        ? `<div class="popup-photos">${spot.photos.map(p => `<img src="${p}" alt="photo" loading="lazy">`).join('')}</div>`
         : '';
 
     return `
-            <div style="position:relative">
-                <div class="popup-tape"></div>
-                <div class="popup-inner">
-                    <div class="popup-header">
-                        <span class="popup-time-badge ${badgeClass}">${badgeLabel}</span>
-                    </div>
-                    <div class="popup-title">${spot.name}</div>
-                    ${photosHTML}
-                    <div class="popup-desc">${spot.description}</div>
-                    <div class="popup-actions">
-                        <button class="popup-add-btn" id="add-btn-${idx}">+ Add to trip</button>
-                    </div>
+        <div style="position:relative">
+            <div class="popup-tape"></div>
+            <div class="popup-inner">
+                <div class="popup-header">
+                    <span class="popup-time-badge ${badgeClass}">${badgeLabel}</span>
+                </div>
+                <div class="popup-title">${spot.name}</div>
+                ${photosHTML}
+                <div class="popup-desc">${spot.description}</div>
+                <div class="popup-actions">
+                    <button class="popup-add-btn" id="add-btn-${idx}">+ Add to trip</button>
                 </div>
             </div>
-        `;
+        </div>
+    `;
 }
 
 function updateMarkers() {
@@ -372,15 +356,20 @@ function updateAllPopupBtns() {
     spotsData.forEach((_, idx) => {
         const btn = document.getElementById(`add-btn-${idx}`);
         if (btn) {
-            if (tripList.includes(idx)) { btn.classList.add('added'); btn.textContent = '✓ Added'; }
-            else { btn.classList.remove('added'); btn.textContent = '+ Add to trip'; }
+            if (tripList.includes(idx)) {
+                btn.classList.add('added');
+                btn.textContent = '✓ Added';
+            } else {
+                btn.classList.remove('added');
+                btn.textContent = '+ Add to trip';
+            }
         }
     });
 }
 
 function updateTripCount() {
     const el = document.getElementById('trip-count');
-    el.textContent = tripList.length > 0 ? `(${tripList.length})` : '';
+    if (el) el.textContent = tripList.length > 0 ? `(${tripList.length})` : '';
 }
 
 function updatePlanner() {
@@ -397,28 +386,26 @@ function updatePlanner() {
     body.innerHTML = tripList.map(idx => {
         const spot = spotsData[idx];
         return `
-                <div class="planner-spot">
-                    <span class="planner-spot-name">${spot.name}</span>
-                    <span class="planner-spot-time">${spot.best_time === 'Daytime' ? '☀️' : '🌅'}</span>
-                    <button class="planner-remove" onclick="removeFromTrip(${idx})">×</button>
-                </div>
-            `;
+            <div class="planner-spot">
+                <span class="planner-spot-name">${spot.name}</span>
+                <span class="planner-spot-time">${spot.best_time === 'Daytime' ? '☀️' : '🌅'}</span>
+                <button class="planner-remove" onclick="removeFromTrip(${idx})">×</button>
+            </div>
+        `;
     }).join('');
 
     const totalSpots = tripList.length;
     const totalMins = totalSpots * TIME_AT_SPOT + (totalSpots - 1) * TRAVEL_BETWEEN;
     const hours = Math.floor(totalMins / 60);
     const mins = totalMins % 60;
-    const timeStr = hours > 0
-        ? `${hours}h ${mins > 0 ? mins + 'min' : ''}`
-        : `${mins}min`;
+    const timeStr = hours > 0 ? `${hours}h ${mins > 0 ? mins + 'min' : ''}` : `${mins}min`;
 
     result.style.display = 'block';
     result.innerHTML = `
-            📍 <strong>${totalSpots}</strong> spot${totalSpots > 1 ? 's' : ''} selected<br>
-            ⏱ Estimated time: <strong>${timeStr}</strong><br>
-            <span style="font-size:12px;color:var(--ink-soft)">~${TIME_AT_SPOT} min/spot + ~${TRAVEL_BETWEEN} min travel between spots</span>
-        `;
+        📍 <strong>${totalSpots}</strong> spot${totalSpots > 1 ? 's' : ''} selected<br>
+        ⏱ Estimated time: <strong>${timeStr}</strong><br>
+        <span style="font-size:12px;color:var(--ink-soft)">~${TIME_AT_SPOT} min/spot + ~${TRAVEL_BETWEEN} min travel between spots</span>
+    `;
 }
 
 window.removeFromTrip = function (idx) {
@@ -427,8 +414,7 @@ window.removeFromTrip = function (idx) {
     updateAllPopupBtns();
 };
 
-// Init
+// ── INIT ──
 map.on('load', () => {
     updateMarkers();
 });
-

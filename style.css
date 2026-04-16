@@ -18,8 +18,7 @@
     padding: 0;
 }
 
-body,
-html {
+body, html {
     height: 100%;
     font-family: 'Lora', serif;
     background: var(--beige);
@@ -32,7 +31,7 @@ html {
     width: 100%;
 }
 
-/* ── HEADERS ── */
+/* ── HEADER ── */
 .header {
     position: absolute;
     top: 20px;
@@ -85,7 +84,6 @@ html {
     border-top: 1px dashed var(--beige-deeper);
     padding-top: 8px;
 }
-
 
 /* ── FILTER BAR ── */
 .filter-bar {
@@ -441,17 +439,7 @@ html {
     font-size: 10px !important;
 }
 
-/* scrollbar styling */
-::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--beige-dark);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--beige-deeper);
-    border-radius: 3px;
-}
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--beige-dark); }
+::-webkit-scrollbar-thumb { background: var(--beige-deeper); border-radius: 3px; }
