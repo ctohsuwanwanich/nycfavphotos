@@ -1,231 +1,414 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoiY2hyaXN3aG9uZ21hcGJveCIsImEiOiJjbDl6bzJ6N3EwMGczM3BudjZmbm5yOXFnIn0.lPhc5Z5H3byF_gf_Jz48Ug';
 
-const mapOptions = {
-    container: 'map-container',
-    style: 'mapbox://styles/mapbox/standard', // Use the standard style for the map
-    projection: 'globe', // display the map as a globe
-    zoom: 13, // initial zoom level, 0 is the world view, higher values zoom in
-    center: [-73.98836, 40.73632], // center the map on this longitude and latitude
-    bearing: 28.75,
-    pitch: 20,
-    config: {
-        basemap: {
-            showPlaceLabels: false,
-            showPointOfInterestLabels: false,
-            showRoadLabels: false,
-            showTransitLabels: false,
-            theme: "monochrome"
+    const spotsData = [
+        {
+            name: "Little Island",
+            description: "An artificial public park island stands in Hudson river offering one of the best views of lower Manhattan. The park has many unique features that make it fun to walk and explore!",
+            best_time: "Sunset",
+            lat: 40.74215682,
+            lng: -74.01025609,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298117/IMG_4134_giemoi.jpg"]
+        },
+        {
+            name: "Pier 51 at Hudson River Park",
+            description: "Want a better view than just standing on the crowded Little Island? A small park in front of Little Island with no metal structure to obstruct your lower Manhattan view. Watching sunset slowly turn to city lights here has been one of the best moments in NYC!",
+            best_time: "Sunset",
+            lat: 40.73833021,
+            lng: -74.0108238,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298119/IMG_4331_jdhxxq.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298120/IMG_4373_ywtaoo.jpg"]
+        },
+        {
+            name: "Strand Book Store",
+            description: "One of the most iconic independent bookstores near Union Square. From used book shelves outside to a gigantic selection filling four floors — always inviting bookworms to explore what it means to be a New Yorker.",
+            best_time: "Daytime",
+            lat: 40.7334584,
+            lng: -73.99104106,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298113/C7526D38-4D6E-43CE-8EC7-9B1CCEEFADCA_pigeuq.jpg"]
+        },
+        {
+            name: "Cherry Hill",
+            description: "As the name suggests, the best time to visit is during Spring when cherry blossoms bloom! The view of cherry blossoms alongside the iconic tower of The San Remo is one of the best spots to chill and enjoy the view.",
+            best_time: "Daytime",
+            lat: 40.77480555,
+            lng: -73.97275255,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298126/IMG_5457_f2rdx1.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298126/IMG_5609_oxibol.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298126/IMG_5487_znqdvx.jpg"]
+        },
+        {
+            name: "Bow Bridge",
+            description: "This iconic bridge in the middle of Central Park offers the prettiest view in Fall. The winter walk is challenging — be careful crossing this bridge full of icy pathways!",
+            best_time: "Daytime",
+            lat: 40.77583379,
+            lng: -73.97180471,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298132/IMG_7171_y2c6bu.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298133/IMG_7177_pjnttc.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298132/IMG_7175_xtfahd.jpg"]
+        },
+        {
+            name: "Bethesda Fountain",
+            description: "The fountain itself is a must-visit landmark in Central Park, but take a small walk to the pond nearby — especially in Fall. One of the most wonderful views for fall color palette in the city.",
+            best_time: "Daytime",
+            lat: 40.77436241,
+            lng: -73.97086777,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298131/IMG_7161_ksm2mc.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298131/IMG_7154_qr7hun.jpg"]
+        },
+        {
+            name: "New York Public Library",
+            description: "The beautiful building that's also functional! Come in, study, and enjoy creative souvenirs perfect for bookworms. Study rooms are available by appointment — a worthwhile effort to appreciate old maps and beautiful architecture.",
+            best_time: "Daytime",
+            lat: 40.75322505,
+            lng: -73.98223216,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298133/IMG_8913_tlzdet.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298130/IMG_5596_ck7kiq.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298116/IMG_3945_u994gy.jpg"]
+        },
+        {
+            name: "Roosevelt Island",
+            description: "A walk along the West side of the island is stunning during Spring — blooming cherry blossoms alongside midtown Manhattan. Cornell Tech campus is also innovative and fun to explore. The East side offers great Queens skyline views.",
+            best_time: "Sunset",
+            lat: 40.75528792,
+            lng: -73.95678723,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298129/IMG_5821_nhyjzt.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298130/IMG_5850_xus5ho.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298131/IMG_5847_flxwbe.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298131/IMG_5801_numxjg.jpg"]
+        },
+        {
+            name: "Hunter's Point South Park",
+            description: "Another beautiful spot to appreciate the midtown skyline alongside cherry blossoms. The circular lawn invites kids to play, making the park lively and joyful.",
+            best_time: "Sunset",
+            lat: 40.74236516,
+            lng: -73.96068996,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298122/IMG_4947_wtjcgq.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298123/IMG_4971_hvkkq0.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298124/IMG_5068_vsfhpz.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298123/IMG_4958_lqvwrp.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298124/IMG_5047_gnelyo.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298124/IMG_5099_bdpyri.jpg"]
+        },
+        {
+            name: "Queens Public Library",
+            description: "The park in front of the library is particularly stunning at sunset time. A quieter spot to enjoy the midtown view as the sky turns orange and the city lights up.",
+            best_time: "Sunset",
+            lat: 40.74551347,
+            lng: -73.95872401,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298131/IMG_7052_a2ckfx.jpg"]
+        },
+        {
+            name: "DUMBO — Manhattan Bridge View",
+            description: "The view of the Manhattan Bridge framed through brick buildings is the most iconic spot in NYC. A must-visit for any first-time visitor.",
+            best_time: "Sunset",
+            lat: 40.70356322,
+            lng: -73.9893763,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298121/IMG_4507_frylfn.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298123/IMG_4513_vmhprl.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298119/IMG_4302_tiqtlk.jpg"]
+        },
+        {
+            name: "Harbor View Lawn",
+            description: "The Harbor View Lawn at Brooklyn Bridge Park is a more local spot to enjoy the lower Manhattan skyline along the East River. Perfect for picnics and a nice day out.",
+            best_time: "Sunset",
+            lat: 40.70193786,
+            lng: -73.99717248,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298122/IMG_4904_lakppl.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298123/IMG_4907_y1uouo.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298123/IMG_4906_bpp22s.jpg"]
+        },
+        {
+            name: "Pell Street, Chinatown",
+            description: "The most iconic Chinatown photospot in NYC — at Pell and Mott Street. Colorful lamps, bustling streets, and the amazing dim sum spot House of Joy make you feel transported to Asia.",
+            best_time: "Daytime",
+            lat: 40.71498527,
+            lng: -73.99883307,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298111/IMG_2833_ao2iog.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298122/IMG_4469_kymxn5.jpg"]
+        },
+        {
+            name: "The Noguchi Museum",
+            description: "The collection of Japanese-American artist Isamu Noguchi, who defined himself as a New Yorker. From sculptures to playground ideas, the museum tells his life story through his art. The shop with Japanese paper lamps is a must-visit.",
+            best_time: "Daytime",
+            lat: 40.76697861,
+            lng: -73.93807734,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298114/IMG_3113_a6t9fl.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298112/IMG_3109_wcoy03.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298112/IMG_3001_gw2gku.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298113/IMG_2993_a0ouir.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298113/IMG_3033_xwniau.jpg"]
+        },
+        {
+            name: "Riverside Park",
+            description: "The park next to the Hudson River offers an amazing place to watch the sunset. A more local spot to enjoy a velvety sky in quiet.",
+            best_time: "Sunset",
+            lat: 40.80186379,
+            lng: -73.9719799,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298116/IMG_3755_uyrarm.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298116/IMG_3747_bfklf7.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298117/IMG_3746_asj2iq.jpg"]
+        },
+        {
+            name: "Washington Square Park",
+            description: "Featuring as the landmark of NYU campus, this public park embodies what New York City is — fun, lively, and exciting. The bustling environment draws artists, students, and visitors from all walks of life.",
+            best_time: "Daytime",
+            lat: 40.73164913,
+            lng: -73.99715416,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298117/IMG_3927_pmp9zl.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298115/IMG_3565_funwru.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298133/IMG_9444_pkxj7r.jpg"]
+        },
+        {
+            name: "Pier A Park (Hoboken)",
+            description: "The best way to see the Manhattan skyline is from outside in. This pier in Hoboken offers one of the most amazing panoramic views of Manhattan — a hidden gem to appreciate the NYC skyline.",
+            best_time: "Daytime",
+            lat: 40.73782938,
+            lng: -74.02651919,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298119/IMG_4277_mqk4yo.jpg"]
+        },
+        {
+            name: "niconeco zakkaya",
+            description: "The Japanese-style stationery store packs a lot of warmth and cuteness into one small space. A hidden gem for all the stationery and window shopping lovers.",
+            best_time: "Daytime",
+            lat: 40.72844426,
+            lng: -73.98332536,
+            photos: ["https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298124/IMG_5203_ugqpzs.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298125/IMG_5204_awkesz.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298125/IMG_5205_yk5tic.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298125/IMG_5206_hx6uje.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298125/IMG_5207_qapz4d.jpg","https://res.cloudinary.com/dy47r8i8h/image/upload/q_auto/f_auto/v1776298126/IMG_5208_l1jmhr.jpg"]
         }
-    },
-}
+    ];
 
-const map = new mapboxgl.Map(mapOptions);
-// Add zoom and rotation controls to the map.
-map.addControl(new mapboxgl.NavigationControl());
+    // avg time at a spot (minutes) + travel time between spots (minutes, rough estimate)
+    const TIME_AT_SPOT = 45;
+    const TRAVEL_BETWEEN = 25;
 
-// Color palette for different programs
-const programColors = {
-    'Instructor': '#2E7D32',
-    'MUP': '#1976D2',
-    'MPA': '#D32F2F',
-    'A3SR': '#F57C00',
-    'CUSP': '#7B1FA2'
-};
+    const timeColors = {
+        Daytime: '#7bb3d4',
+        Sunset: '#c87c7c'
+    };
 
-const pizzaData = [
-    {
-        "student_name": "Chris Whong",
-        "pizza_place": "Ledo Pizza",
-        "longitude": -73.990263,
-        "latitude": 40.754294,
-        "program": "Instructor",
-    },
-    {
-        "student_name": "New",
-        "pizza_place": "Emily's West Village",
-        "longitude": -74.00386839,
-        "latitude": 40.72948003,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Seth",
-        "pizza_place": "Leo's Pizza",
-        "longitude": -73.9569872,
-        "latitude": 40.7125481,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Jules",
-        "pizza_place": "Lp Pizzeria",
-        "longitude": -73.93365964,
-        "latitude": 40.69832594,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Joey",
-        "pizza_place": "Gino's Pizza",
-        "longitude": -73.9630856,
-        "latitude": 40.67524774,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Mylene",
-        "pizza_place": "Eddie And Sam's N.Y Pizza",
-        "longitude": -82.4592579,
-        "latitude": 27.9487278,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Ryan",
-        "pizza_place": "Johnny's Pizzeria",
-        "longitude": -73.83949,
-        "latitude": 40.91779,
-        "program": "MPA",
-    },
-    {
-        "student_name": "Paul",
-        "pizza_place": "Ungaro Coal Fired Pizza Cafe",
-        "longitude": -74.13319645,
-        "latitude": 40.62625321,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Brant",
-        "pizza_place": "Tony's Pizza",
-        "longitude": -73.91879,
-        "latitude": 40.69923,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Ruby S",
-        "pizza_place": "Rocco Pizza",
-        "longitude": -73.94584,
-        "latitude": 40.69217,
-        "program": "A3SR",
-    },
-    {
-        "student_name": "Johanna",
-        "pizza_place": "Best Pizza",
-        "longitude": -73.95349549,
-        "latitude": 40.71572512,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Lula Feifei Yang",
-        "pizza_place": "Lombardi's",
-        "longitude": -73.99681673,
-        "latitude": 40.72398245,
-        "program": "CUSP",
-    },
-    {
-        "student_name": "Sophia",
-        "pizza_place": "Pizza House",
-        "longitude": -83.7348,
-        "latitude": 42.2743,
-        "program": "MPA",
-    },
-    {
-        "student_name": "Sarah",
-        "pizza_place": "Hot's Pizza",
-        "longitude": -73.98917213,
-        "latitude": 40.71414361,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Ruby F",
-        "pizza_place": "Julie's Pizzeria",
-        "longitude": -73.90722986,
-        "latitude": 40.70439921,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Laura",
-        "pizza_place": "La Pizzeria de Lermit",
-        "longitude": -75.1770331,
-        "latitude": 4.423909764,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Allison",
-        "pizza_place": "99¢ Pizza",
-        "longitude": -73.98556949,
-        "latitude": 40.73254642,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Zoe",
-        "pizza_place": "L'Industrie Pizza",
-        "longitude": -73.95780227,
-        "latitude": 40.71163157,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Maggie",
-        "pizza_place": "Joe & Sal's Pizza",
-        "longitude": -73.95868804,
-        "latitude": 40.66927766,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Angie",
-        "pizza_place": "Artichokes",
-        "longitude": -74.0018897,
-        "latitude": 40.729949,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Eva",
-        "pizza_place": "Freddy's Pizza Astoria",
-        "longitude": -73.92716666,
-        "latitude": 40.76294603,
-        "program": "MUP",
-    },
-    {
-        "student_name": "Sharon",
-        "pizza_place": "Sally's Apizza",
-        "longitude": -73.51460606,
-        "latitude": 41.09499509,
-        "program": "MPA",
-    }
-]
+    const map = new mapboxgl.Map({
+        container: 'map-container',
+        style: 'mapbox://styles/mapbox/standard',
+        zoom: 12.5,
+        center: [-73.98, 40.745],
+        bearing: 0,
+        pitch: 10,
+        config: {
+            basemap: {
+                showPlaceLabels: true,
+                showPointOfInterestLabels: false,
+                showRoadLabels: false,
+                showTransitLabels: false,
+                theme: "dawn"
+            }
+        }
+    });
 
+    map.addControl(new mapboxgl.NavigationControl(), 'bottom-left');
 
-pizzaData.forEach((studentData) => {
-    const marker = new mapboxgl.Marker({
-        color: programColors[studentData.program] || '#999999'
-    })
-        .setLngLat([studentData.longitude, studentData.latitude])
-        .setPopup(
-            new mapboxgl.Popup({ offset: 25 })
-                .setText(`${studentData.student_name} likes to eat pizza at ${studentData.pizza_place}.`)
-        )
-        .addTo(map);
-})
+    let activeFilter = 'All';
+    let markers = [];
+    let tripList = []; // array of spot indices
 
-// Create legend
-const legend = document.createElement('div');
-legend.className = 'legend';
-legend.innerHTML = '<h4>Programs</h4>';
-
-Object.entries(programColors).forEach(([program, color]) => {
-    const item = document.createElement('div');
-    item.className = 'legend-item';
-    item.innerHTML = `
-        <span class="legend-circle" style="background-color: ${color}"></span>
-        <span class="legend-label">${program}</span>
+    // ── BUILD HEADER ──
+    const header = document.createElement('div');
+    header.className = 'header';
+    header.innerHTML = `
+        <div class="header-tape"></div>
+        <h1>New's NYC<br>Photo Diary 📷</h1>
+        <div class="instagram">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c87c7c" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#c87c7c" stroke="none"/></svg>
+            @nnctshot
+        </div>
+        <div class="subtitle">click a pin to explore ✨<br>build your own itinerary below!</div>
     `;
-    legend.appendChild(item);
-});
+    document.body.appendChild(header);
 
-document.body.appendChild(legend);
+    // ── BUILD FILTER ──
+    const filterBar = document.createElement('div');
+    filterBar.className = 'filter-bar';
+    filterBar.innerHTML = `
+        <button class="filter-btn active-all" data-filter="All">🗺 All spots</button>
+        <button class="filter-btn" data-filter="Daytime">☀️ Daytime</button>
+        <button class="filter-btn" data-filter="Sunset">🌅 Sunset</button>
+    `;
+    document.body.appendChild(filterBar);
 
-// Create header
-const header = document.createElement('div');
-header.className = 'header';
-header.innerHTML = `
-    <h1>🍕 Web Mapping Class Pizza Map 🗺️</h1>
-    <p class="description">This map was crowdsourced in class to show students' favorite pizza places around NYC and beyond!</p>
-    <p class="call-to-action">👆 Click the markers to learn about each student's pizza preferences</p>
-`;
+    filterBar.addEventListener('click', e => {
+        const btn = e.target.closest('.filter-btn');
+        if (!btn) return;
+        activeFilter = btn.dataset.filter;
+        filterBar.querySelectorAll('.filter-btn').forEach(b => {
+            b.className = 'filter-btn';
+        });
+        if (activeFilter === 'All') btn.classList.add('active-all');
+        else if (activeFilter === 'Daytime') btn.classList.add('active-day');
+        else btn.classList.add('active-sunset');
+        updateMarkers();
+    });
 
-document.body.appendChild(header);
+    // ── BUILD LEGEND ──
+    const legend = document.createElement('div');
+    legend.className = 'legend';
+    legend.innerHTML = `
+        <h4>Best time to visit</h4>
+        <div class="legend-item">
+            <div class="legend-dot" style="background:${timeColors.Daytime}"></div>
+            <span>Daytime</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background:${timeColors.Sunset}"></div>
+            <span>Sunset / Evening</span>
+        </div>
+    `;
+    document.body.appendChild(legend);
+
+    // ── BUILD PLANNER ──
+    const plannerToggle = document.createElement('button');
+    plannerToggle.className = 'planner-toggle';
+    plannerToggle.innerHTML = `<span>🗓</span> My Trip Planner <span id="trip-count"></span>`;
+    document.body.appendChild(plannerToggle);
+
+    const plannerPanel = document.createElement('div');
+    plannerPanel.className = 'planner-panel';
+    plannerPanel.innerHTML = `
+        <div class="planner-header">
+            <span>Trip Planner ✏️</span>
+            <button class="planner-clear" id="clear-trip">clear all</button>
+        </div>
+        <div class="planner-body" id="planner-body">
+            <div class="planner-empty">No spots added yet~<br>Click a pin and tap "Add to trip" 📌</div>
+        </div>
+        <div class="planner-result" id="planner-result" style="display:none"></div>
+    `;
+    document.body.appendChild(plannerPanel);
+
+    plannerToggle.addEventListener('click', () => {
+        plannerPanel.classList.toggle('open');
+    });
+
+    document.getElementById('clear-trip').addEventListener('click', () => {
+        tripList = [];
+        updatePlanner();
+        updateAllPopupBtns();
+    });
+
+    // ── MARKERS ──
+    function createMarker(spot, idx) {
+        const el = document.createElement('div');
+        el.style.cssText = `
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background: ${timeColors[spot.best_time]};
+            border: 2.5px solid rgba(255,255,255,0.9);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+            cursor: pointer;
+            transition: transform 0.15s;
+        `;
+        el.addEventListener('mouseenter', () => el.style.transform = 'scale(1.4)');
+        el.addEventListener('mouseleave', () => el.style.transform = 'scale(1)');
+
+        const popup = new mapboxgl.Popup({ offset: 15, maxWidth: '300px', closeButton: true })
+            .setHTML(buildPopupHTML(spot, idx));
+
+        const marker = new mapboxgl.Marker({ element: el })
+            .setLngLat([spot.lng, spot.lat])
+            .setPopup(popup)
+            .addTo(map);
+
+        // re-render popup html after open to attach event
+        marker.getPopup().on('open', () => {
+            setTimeout(() => {
+                const btn = document.getElementById(`add-btn-${idx}`);
+                if (btn) {
+                    if (tripList.includes(idx)) btn.classList.add('added'), btn.textContent = '✓ Added';
+                    btn.addEventListener('click', () => toggleTrip(idx, btn));
+                }
+            }, 50);
+        });
+
+        return marker;
+    }
+
+    function buildPopupHTML(spot, idx) {
+        const badgeClass = spot.best_time === 'Daytime' ? 'day' : 'sunset';
+        const badgeLabel = spot.best_time === 'Daytime' ? '☀️ Daytime' : '🌅 Sunset';
+        const photosHTML = spot.photos && spot.photos.length
+            ? `<div class="popup-photos">${spot.photos.map(p => `<img src="${p}" alt="photo">`).join('')}</div>`
+            : '';
+
+        return `
+            <div style="position:relative">
+                <div class="popup-tape"></div>
+                <div class="popup-inner">
+                    <div class="popup-header">
+                        <span class="popup-time-badge ${badgeClass}">${badgeLabel}</span>
+                    </div>
+                    <div class="popup-title">${spot.name}</div>
+                    ${photosHTML}
+                    <div class="popup-desc">${spot.description}</div>
+                    <div class="popup-actions">
+                        <button class="popup-add-btn" id="add-btn-${idx}">+ Add to trip</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    function updateMarkers() {
+        markers.forEach(m => m.remove());
+        markers = [];
+        spotsData.forEach((spot, idx) => {
+            if (activeFilter === 'All' || spot.best_time === activeFilter) {
+                markers.push(createMarker(spot, idx));
+            }
+        });
+    }
+
+    function toggleTrip(idx, btn) {
+        if (tripList.includes(idx)) {
+            tripList = tripList.filter(i => i !== idx);
+            btn.classList.remove('added');
+            btn.textContent = '+ Add to trip';
+        } else {
+            tripList.push(idx);
+            btn.classList.add('added');
+            btn.textContent = '✓ Added';
+        }
+        updatePlanner();
+        updateTripCount();
+    }
+
+    function updateAllPopupBtns() {
+        spotsData.forEach((_, idx) => {
+            const btn = document.getElementById(`add-btn-${idx}`);
+            if (btn) {
+                if (tripList.includes(idx)) { btn.classList.add('added'); btn.textContent = '✓ Added'; }
+                else { btn.classList.remove('added'); btn.textContent = '+ Add to trip'; }
+            }
+        });
+    }
+
+    function updateTripCount() {
+        const el = document.getElementById('trip-count');
+        el.textContent = tripList.length > 0 ? `(${tripList.length})` : '';
+    }
+
+    function updatePlanner() {
+        const body = document.getElementById('planner-body');
+        const result = document.getElementById('planner-result');
+        updateTripCount();
+
+        if (tripList.length === 0) {
+            body.innerHTML = `<div class="planner-empty">No spots added yet~<br>Click a pin and tap "Add to trip" 📌</div>`;
+            result.style.display = 'none';
+            return;
+        }
+
+        body.innerHTML = tripList.map(idx => {
+            const spot = spotsData[idx];
+            return `
+                <div class="planner-spot">
+                    <span class="planner-spot-name">${spot.name}</span>
+                    <span class="planner-spot-time">${spot.best_time === 'Daytime' ? '☀️' : '🌅'}</span>
+                    <button class="planner-remove" onclick="removeFromTrip(${idx})">×</button>
+                </div>
+            `;
+        }).join('');
+
+        const totalSpots = tripList.length;
+        const totalMins = totalSpots * TIME_AT_SPOT + (totalSpots - 1) * TRAVEL_BETWEEN;
+        const hours = Math.floor(totalMins / 60);
+        const mins = totalMins % 60;
+        const timeStr = hours > 0
+            ? `${hours}h ${mins > 0 ? mins + 'min' : ''}`
+            : `${mins}min`;
+
+        result.style.display = 'block';
+        result.innerHTML = `
+            📍 <strong>${totalSpots}</strong> spot${totalSpots > 1 ? 's' : ''} selected<br>
+            ⏱ Estimated time: <strong>${timeStr}</strong><br>
+            <span style="font-size:12px;color:var(--ink-soft)">~${TIME_AT_SPOT} min/spot + ~${TRAVEL_BETWEEN} min travel between spots</span>
+        `;
+    }
+
+    window.removeFromTrip = function(idx) {
+        tripList = tripList.filter(i => i !== idx);
+        updatePlanner();
+        updateAllPopupBtns();
+    };
+
+    // Init
+    map.on('load', () => {
+        updateMarkers();
+    });
