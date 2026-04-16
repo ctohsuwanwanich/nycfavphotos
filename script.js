@@ -266,53 +266,27 @@ document.getElementById('clear-trip').addEventListener('click', () => {
 
 // ── MARKERS ──
 function createMarker(spot, idx) {
-    const el = document.createElement('div');
-    el.style.cssText = `
-        width:16px; height:16px;
-        border-radius:50%;
-        background:${timeColors[spot.best_time]};
-        border:2.5px solid rgba(255,255,255,0.9);
-        box-shadow:0 2px 6px rgba(0,0,0,0.25);
-        cursor:pointer;
-        transition:transform 0.15s;
-    `;
-    el.addEventListener('mouseenter', () => el.style.transform = 'scale(1.4)');
-    el.addEventListener('mouseleave', () => el.style.transform = 'scale(1)');
-
-    // Create marker first, then attach popup via click to fix positioning bug
-    const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+    const popup = new mapboxgl.Popup({ offset: 25, maxWidth: '300px' })
+        .setHTML(buildPopupHTML(spot, idx));
+ 
+    const marker = new mapboxgl.Marker({ color: timeColors[spot.best_time] })
         .setLngLat([spot.lng, spot.lat])
+        .setPopup(popup)
         .addTo(map);
-
-    el.addEventListener('click', () => {
-        // Close any other open popups
-        document.querySelectorAll('.mapboxgl-popup').forEach(p => p.remove());
-
-        const popup = new mapboxgl.Popup({
-            offset: 12,
-            maxWidth: '300px',
-            closeButton: true,
-            anchor: 'bottom',
-            className: 'spot-popup'
-        })
-            .setLngLat([spot.lng, spot.lat])
-            .setHTML(buildPopupHTML(spot, idx))
-            .addTo(map);
-
-        popup.on('open', () => {
-            setTimeout(() => {
-                const btn = document.getElementById(`add-btn-${idx}`);
-                if (btn) {
-                    if (tripList.includes(idx)) {
-                        btn.classList.add('added');
-                        btn.textContent = '✓ Added';
-                    }
-                    btn.addEventListener('click', () => toggleTrip(idx, btn));
+ 
+    popup.on('open', () => {
+        setTimeout(() => {
+            const btn = document.getElementById(`add-btn-${idx}`);
+            if (btn) {
+                if (tripList.includes(idx)) {
+                    btn.classList.add('added');
+                    btn.textContent = '✓ Added';
                 }
-            }, 50);
-        });
+                btn.addEventListener('click', () => toggleTrip(idx, btn));
+            }
+        }, 50);
     });
-
+ 
     return marker;
 }
 
