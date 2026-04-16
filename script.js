@@ -412,3 +412,5 @@ mapboxgl.accessToken = 'MAPBOX_TOKEN_PLACEHOLDER';
     map.on('load', () => {
         updateMarkers();
     });
+
+    

@@ -407,3 +407,4 @@ body, html {
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: var(--beige-dark); }
 ::-webkit-scrollbar-thumb { background: var(--beige-deeper); border-radius: 3px; }
+
