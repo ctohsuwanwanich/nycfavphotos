@@ -279,25 +279,38 @@ function createMarker(spot, idx) {
     el.addEventListener('mouseenter', () => el.style.transform = 'scale(1.4)');
     el.addEventListener('mouseleave', () => el.style.transform = 'scale(1)');
 
-    const popup = new mapboxgl.Popup({ offset: 15, maxWidth: '300px', closeButton: true })
-        .setHTML(buildPopupHTML(spot, idx));
-
-    const marker = new mapboxgl.Marker({ element: el })
+    // Create marker first, then attach popup via click to fix positioning bug
+    const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
         .setLngLat([spot.lng, spot.lat])
-        .setPopup(popup)
         .addTo(map);
 
-    marker.getPopup().on('open', () => {
-        setTimeout(() => {
-            const btn = document.getElementById(`add-btn-${idx}`);
-            if (btn) {
-                if (tripList.includes(idx)) {
-                    btn.classList.add('added');
-                    btn.textContent = '✓ Added';
+    el.addEventListener('click', () => {
+        // Close any other open popups
+        document.querySelectorAll('.mapboxgl-popup').forEach(p => p.remove());
+
+        const popup = new mapboxgl.Popup({
+            offset: 12,
+            maxWidth: '300px',
+            closeButton: true,
+            anchor: 'bottom',
+            className: 'spot-popup'
+        })
+            .setLngLat([spot.lng, spot.lat])
+            .setHTML(buildPopupHTML(spot, idx))
+            .addTo(map);
+
+        popup.on('open', () => {
+            setTimeout(() => {
+                const btn = document.getElementById(`add-btn-${idx}`);
+                if (btn) {
+                    if (tripList.includes(idx)) {
+                        btn.classList.add('added');
+                        btn.textContent = '✓ Added';
+                    }
+                    btn.addEventListener('click', () => toggleTrip(idx, btn));
                 }
-                btn.addEventListener('click', () => toggleTrip(idx, btn));
-            }
-        }, 50);
+            }, 50);
+        });
     });
 
     return marker;
