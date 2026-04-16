@@ -19,10 +19,6 @@ const mapOptions = {
     },
 }
 
-const map = new mapboxgl.Map(mapOptions);
-// Add zoom and rotation controls to the map.
-map.addControl(new mapboxgl.NavigationControl());
-
 const spotsData = [
     {
         name: "Little Island",
